@@ -92,28 +92,51 @@
         </div>
     </section>
 
-    {{-- SECCIÓN DE TESTIMONIOS DINÁMICA - Muestra los 3 más recientes --}}
+    {{-- 
+        ========================================================================
+        Esta es la sección de testimonios estáticos para la página principal.
+        Ahora el botón redirige a la sección de testimonios pública.
+        ========================================================================
+    --}}
     <section id="testimonios-preview" class="py-20 bg-[var(--white-text)]">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl font-bold mb-8 text-[var(--accent-gold)]">Testimonios de Nuestros Clientes</h2>
             <p class="text-xl mb-12 text-[var(--charcoal-text)] leading-relaxed">Conoce las historias de éxito de quienes confían en nuestro servicio.</p>
 
+            <!-- Contenedor de la cuadrícula de testimonios -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @forelse ($testimonios as $testimonio)
-                    <div class="bg-[var(--light-grey)] p-8 rounded-xl shadow-lg transition duration-300 transform hover:-translate-y-1 hover:shadow-2xl">
-                        <p class="text-lg text-[var(--charcoal-text)] italic mb-4">
-                            "{{ $testimonio->comentario }}"
-                        </p>
-                        <p class="font-semibold text-xl text-[var(--secondary-blue)]">- {{ $testimonio->nombre_cliente }}</p>
-                    </div>
-                @empty
-                    <div class="col-span-full">
-                        <p class="text-gray-500">Aún no hay testimonios para mostrar.</p>
-                    </div>
-                @endforelse
+                {{-- Testimonio 1 --}}
+                <div class="bg-[var(--light-grey)] rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105">
+                    <blockquote class="italic text-lg text-[var(--charcoal-text)] opacity-90 mb-4">
+                        "Increíble servicio. La atención al cliente fue excepcional y el producto superó todas mis expectativas."
+                    </blockquote>
+                    <div class="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-800 mb-2">A.V.</div>
+                    <p class="font-bold text-xl text-[var(--secondary-blue)]">Ana Valenzuela</p>
+                    <p class="text-base text-[var(--charcoal-text)] opacity-70">Gerente de Proyectos</p>
+                </div>
+
+                {{-- Testimonio 2 --}}
+                <div class="bg-[var(--light-grey)] rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105">
+                    <blockquote class="italic text-lg text-[var(--charcoal-text)] opacity-90 mb-4">
+                        "Una experiencia transformadora. Recomiendo esta empresa a cualquiera que busque resultados de alta calidad."
+                    </blockquote>
+                    <div class="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center text-xl font-bold text-green-800 mb-2">J.M.</div>
+                    <p class="font-bold text-xl text-[var(--secondary-blue)]">Juan Méndez</p>
+                    <p class="text-base text-[var(--charcoal-text)] opacity-70">Director de Marketing</p>
+                </div>
+
+                {{-- Testimonio 3 --}}
+                <div class="bg-[var(--light-grey)] rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105">
+                    <blockquote class="italic text-lg text-[var(--charcoal-text)] opacity-90 mb-4">
+                        "Me encantó su enfoque metódico y su dedicación para resolver mis problemas. Volveré a trabajar con ellos."
+                    </blockquote>
+                    <div class="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center text-xl font-bold text-purple-800 mb-2">L.R.</div>
+                    <p class="font-bold text-xl text-[var(--secondary-blue)]">Laura Ramírez</p>
+                    <p class="text-base text-[var(--charcoal-text)] opacity-70">Analista de Negocios</p>
+                </div>
             </div>
 
-            {{-- Botón para redirigir a la página completa de testimonios --}}
+            {{-- Botón para redirigir a la página completa de testimonios, ahora ubicado debajo --}}
             <div class="mt-12">
                 <a href="{{ route('testimonios.index') }}" class="inline-block bg-[var(--secondary-blue)] text-[var(--white-text)] py-3 px-8 rounded-full text-lg font-semibold hover:bg-[var(--accent-gold)] transition duration-300">
                     Ver Todos los Testimonios
