@@ -28,19 +28,45 @@
             @if(isset($ultimasAreas) && $ultimasAreas->isEmpty())
                 <p class="text-center text-gray-600">No hay áreas de práctica recientes para mostrar.</p>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-[var(--charcoal-text)]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-[var(--charcoal-text)]">
                     {{-- Bucle para mostrar las áreas de práctica --}}
                     @foreach($ultimasAreas as $area)
-                        <a href="{{ route('areas.show', $area->slug) }}" class="block bg-[var(--light-grey)] p-8 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+                        {{-- Se envuelve todo el bloque en el enlace para que sea clicable --}}
+                        <a href="{{ route('areas.show', $area->slug) }}" class="group block bg-[var(--light-grey)] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 h-full flex flex-col justify-between">
                             <div class="p-2 text-center">
-                                @if($area->icono)
-                                    <x-heroicon-o-{{ Str::after($area->icono, 'heroicon-o-') }} class="h-16 w-16 mx-auto text-[var(--accent-gold)] mb-4" />
+                                {{-- Lógica condicional para mostrar el ícono correcto --}}
+                                @if(Str::contains($area->nombre, 'Constitucional'))
+                                    <svg class="h-16 w-16 mx-auto text-[var(--secondary-blue)] mb-4 transition-colors duration-300 group-hover:text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19L3 16v-8l6 3m-6 3v5l6 3v-5m-6-3l6-3m0 0l6-3m-6 3v5l6 3v-5"></path>
+                                    </svg>
+                                @elseif(Str::contains($area->nombre, 'Civil'))
+                                    <svg class="h-16 w-16 mx-auto text-[var(--secondary-blue)] mb-4 transition-colors duration-300 group-hover:text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m-5 4h4a2 2 0 002-2v-8a2 2 0 00-2-2H9a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 10h-2M7 10H5a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-8a2 2 0 00-2-2h-2z"></path>
+                                    </svg>
+                                @elseif(Str::contains($area->nombre, 'Familia'))
+                                    <svg class="h-16 w-16 mx-auto text-[var(--secondary-blue)] mb-4 transition-colors duration-300 group-hover:text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
                                 @else
-                                    <x-heroicon-o-cube class="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                                    {{-- Ícono por defecto si no coincide --}}
+                                    <svg class="h-16 w-16 mx-auto text-gray-400 mb-4 transition-colors duration-300 group-hover:text-[var(--secondary-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.748 5.617 9.458 5 8.167 5c-1.688 0-3.266.368-4.821 1.077a1.986 1.986 0 00-1.074 1.63M12 6.253a8.962 8.962 0 014.821 1.077c.65.342 1.074.966 1.074 1.63v4.442M12 6.253C13.252 5.617 14.542 5 15.833 5c1.688 0 3.266.368 4.821 1.077a1.986 1.986 0 011.074 1.63"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.5 10a5 5 0 11-10 0 5 5 0 0110 0z"></path>
+                                    </svg>
                                 @endif
                             </div>
-                            <h3 class="text-3xl font-semibold mb-4 text-[var(--secondary-blue)]">{{ $area->nombre }}</h3>
-                            <p class="text-lg leading-relaxed">{{ $area->descripcion_corta }}</p>
+                            <h3 class="text-xl font-semibold mb-2 text-[var(--secondary-blue)]">{{ $area->nombre }}</h3>
+                            <p class="text-sm leading-relaxed mb-4">{{ $area->descripcion_corta }}</p>
+                            {{-- Agregado el botón "Ver más" --}}
+                            <div class="mt-auto">
+                                <span class="inline-block text-[var(--accent-gold)] font-semibold transition duration-300 group-hover:text-[var(--secondary-blue)]">
+                                    Ver más →
+                                </span>
+                            </div>
                         </a>
                     @endforeach
                 </div>
@@ -83,14 +109,17 @@
     <section id="reconocimientos" class="py-20 bg-[var(--dark-blue)] text-[var(--white-text)] text-center">
         <div class="max-w-7xl mx-auto px-6">
             <h2 class="text-5xl font-bold mb-16 text-[var(--accent-gold)]">Nuestros Reconocimientos</h2>
-            <div class="flex flex-wrap justify-center items-center gap-12">
-                <img src="https://via.placeholder.com/150x80/FFFFFF/000000?text=IFLR1000" alt="IFLR1000 Logo" class="h-20 opacity-80 hover:opacity-100 transition duration-300">
-                <img src="https://via.placeholder.com/150x80/FFFFFF/000000?text=Chambers" alt="Chambers Logo" class="h-20 opacity-80 hover:opacity-100 transition duration-300">
-                <img src="https://via.placeholder.com/150x80/FFFFFF/000000?text=Legal500" alt="Legal 500 Logo" class="h-20 opacity-80 hover:opacity-100 transition duration-300">
-                <img src="https://via.placeholder.com/150x80/FFFFFF/000000?text=LatinLawyer" alt="Latin Lawyer Logo" class="h-20 opacity-80 hover:opacity-100 transition duration-300">
+            <div class="flex flex-wrap justify-center items-center gap-12 mb-12">
+                {{-- Se ha actualizado la ruta de las imágenes con los diplomas que subiste --}}
+                <img src="{{ asset('imagenes/diploma2.jpg') }}" alt="Certificado 1" class="h-40 opacity-80 hover:opacity-100 transition duration-300">
+                <img src="{{ asset('imagenes/diploma2.jpg') }}" alt="Certificado 2" class="h-40 opacity-80 hover:opacity-100 transition duration-300">
+                <img src="{{ asset('imagenes/diploma2.jpg') }}" alt="Certificado 3" class="h-40 opacity-80 hover:opacity-100 transition duration-300">
+                <img src="{{ asset('imagenes/diploma2.jpg') }}" alt="Certificado 4" class="h-40 opacity-80 hover:opacity-100 transition duration-300">
             </div>
         </div>
     </section>
+
+
 
     {{-- 
         ========================================================================

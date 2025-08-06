@@ -19,9 +19,12 @@
 
                 <h1 class="text-4xl font-bold text-gray-800 mb-4">{{ $area->nombre }}</h1>
 
-                {{-- Muestra el contenido completo (usando {!! !!} para HTML) --}}
+                {{--
+                    CAMBIO APLICADO AQUÍ: 
+                    Se cambió '$area->descripcion_completa' a '$area->contenido' para que coincida con el campo de la base de datos que se usa en el formulario de la primera imagen.
+                --}}
                 <div class="prose max-w-none text-gray-700 leading-relaxed">
-                    {!! $area->descripcion_completa !!}
+                    {!! $area->contenido !!}
                 </div>
             </article>
         </div>

@@ -19,6 +19,15 @@ class AreaController extends Controller
         Log::info('Áreas encontradas: ' . $areas->count());
         if ($areas->isEmpty()) {
             Log::warning('No se encontraron áreas de práctica.');
+        } else {
+            // --- Lógica de depuración de datos ---
+            // Imprime los valores del campo 'icono' en el archivo de log para que los verifiques.
+            Log::info('--- Valores del campo "icono" ---');
+            foreach ($areas as $area) {
+                // El valor '{$area->icono}' mostrará "NULL" si el campo está vacío.
+                Log::info("ID: {$area->id}, Nombre: {$area->nombre}, Icono: '{$area->icono}'");
+            }
+            Log::info('--- Fin de depuración ---');
         }
 
         // Pasa las áreas a la vista de listado
