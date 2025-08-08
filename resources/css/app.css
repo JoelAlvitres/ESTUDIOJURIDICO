@@ -1,0 +1,15 @@
+/* resources/css/app.css */
+.profesional-foto {
+    transition: transform 0.3s ease;
+}
+
+.profesional-card:hover .profesional-foto {
+    transform: scale(1.05);
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str; // Necesario para el slug si lo usas en el modelo
+use Illuminate\Support\Str;
 
 class Profesional extends Model
 {
     use HasFactory;
 
-    // Nombre de la tabla en la base de datos. Asegúrate de que coincida EXACTAMENTE.
     protected $table = 'profesionales';
 
-    // Campos que se pueden asignar masivamente (llenar desde un formulario, como Filament)
     protected $fillable = [
         'nombre_completo',
         'slug',
@@ -28,22 +26,51 @@ class Profesional extends Model
         'publicado',
     ];
 
-    // Casteo de atributos para asegurar que 'publicado' se trate como un booleano
     protected $casts = [
         'publicado' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    // Opcional: Si no estás usando `reactive()` y `afterStateUpdated` en Filament para el slug,
-    // puedes descomentar este método para que el slug se genere automáticamente al guardar el modelo.
-    // public static function boot()
-    // {
-    //     parent::boot();
-    //     static::saving(function ($profesional) {
-    //         if (empty($profesional->slug) || $profesional->isDirty('nombre_completo')) {
-    //             $profesional->slug = Str::slug($profesional->nombre_completo);
-    //         }
-    //     });
-    // }
+    // Accesor para la URL de la foto
+    public function getFotoUrlAttribute()
+    {
+        if (!$this->foto) {
+            return asset('images/default-profile.jpg');
+        }
+        
+        return Str::startsWith($this->foto, 'http') 
+            ? $this->foto 
+            : asset('storage/' . $this->foto);
+    }
+
+    // Accesor para iniciales (útil para avatares)
+    public function getInicialesAttribute()
+    {
+        return Str::initials($this->nombre_completo);
+    }
+
+    // Generación automática de slug
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($profesional) {
+            if (empty($profesional->slug) || $profesional->isDirty('nombre_completo')) {
+                $profesional->slug = Str::slug($profesional->nombre_completo);
+            }
+        });
+    }
+
+    // Scope para profesionales publicados
+    public function scopePublicados($query)
+    {
+        return $query->where('publicado', true);
+    }
+
+    // Scope para ordenar por el campo 'orden'
+    public function scopeOrdenados($query)
+    {
+        return $query->orderBy('orden');
+    }
 }

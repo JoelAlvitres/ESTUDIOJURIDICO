@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lexi - Asistente Virtual</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9fafb;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            max-width: 400px;
+            max-height: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .message-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            background: #e5e7eb;
+            color: #374151;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .user-message {
+            background: #1A2E35;
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .option-button {
+            background: #1A2E35;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-button:hover {
+            background: #2A607C;
+        }
+
+        .input-area {
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-area input:focus {
+            border-color: #1A2E35;
+        }
+
+        .input-area button {
+            background: #1A2E35;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .input-area button:hover {
+            background: #2A607C;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: #e5e7eb;
+            border-radius: 18px;
+            align-self: flex-start;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="message-area" class="message-area">
+            <!-- Mensajes aparecerán aquí dinámicamente -->
+        </div>
+        
+        <div class="input-area">
+            <input id="user-input" type="text" placeholder="Escribe tu mensaje...">
+            <button id="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageArea = document.getElementById('message-area');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+
+            // Configuración del chatbot
+            const botName = "Lexi";
+            const botTitle = "Asistente Legal";
+            const welcomeMessage = `Hola, soy ${botName}, ${botTitle} de Rodas Elías Abogados. ¿En qué puedo ayudarte hoy?`;
+            const quickOptions = [
+                "Servicios legales",
+                "Contactar abogado",
+                "Horarios de atención",
+                "Ubicación del estudio"
+            ];
+
+            // Mostrar mensaje de bienvenida
+            setTimeout(() => {
+                addMessage(welcomeMessage, 'bot');
+                showQuickOptions(quickOptions);
+            }, 500);
+
+            // Funciones principales
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', `${sender}-message`);
+                messageDiv.textContent = text;
+                messageArea.appendChild(messageDiv);
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.id = 'typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                messageArea.appendChild(typingDiv);
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }
+
+            function hideTypingIndicator() {
+                const typing = document.getElementById('typing-indicator');
+                if (typing) typing.remove();
+            }
+
+            function showQuickOptions(options) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options-container');
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-button');
+                    button.textContent = option;
+                    button.addEventListener('click', () => {
+                        userInput.value = option;
+                        sendMessage();
+                    });
+                    optionsDiv.appendChild(button);
+                });
+                
+                messageArea.appendChild(optionsDiv);
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }
+
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (!message) return;
+                
+                addMessage(message, 'user');
+                userInput.value = '';
+                
+                showTypingIndicator();
+                
+                // Simular tiempo de respuesta
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                    
+                    // Mostrar opciones nuevamente si es relevante
+                    if (!message.toLowerCase().includes('contactar') && 
+                        !message.toLowerCase().includes('horario') && 
+                        !message.toLowerCase().includes('ubicación')) {
+                        showQuickOptions(quickOptions);
+                    }
+                }, 1000 + Math.random() * 2000);
+            }
+
+            function generateResponse(message) {
+                const lowerMsg = message.toLowerCase();
+                
+                if (lowerMsg.includes('hola') || lowerMsg.includes('buenos') || lowerMsg.includes('buenas')) {
+                    return `¡Hola de nuevo! ¿En qué puedo ayudarte hoy?`;
+                }
+                else if (lowerMsg.includes('servicio') || lowerMsg.includes('ofrecen')) {
+                    return `En Rodas Elías Abogados ofrecemos:\n\n- Derecho Corporativo\n- Derecho Civil\n- Derecho Penal\n- Derecho de Familia\n\n¿Te interesa alguno en particular?`;
+                }
+                else if (lowerMsg.includes('contactar') || lowerMsg.includes('hablar') || lowerMsg.includes('abogado')) {
+                    return `Puedes contactar a nuestro equipo:\n\n📞 Teléfono: (01) 123-4567\n📧 Email: contacto@rodaselias.com\n\nTambién puedes escribirnos por WhatsApp haciendo clic en el botón flotante verde.`;
+                }
+                else if (lowerMsg.includes('horario') || lowerMsg.includes('atención') || lowerMsg.includes('disponible')) {
+                    return `Nuestro horario de atención es:\n\nLunes a Viernes: 9:00 am - 6:00 pm\nSábados: 9:00 am - 1:00 pm\n\n¿Necesitas una cita fuera de este horario?`;
+                }
+                else if (lowerMsg.includes('ubicación') || lowerMsg.includes('dirección') || lowerMsg.includes('oficina')) {
+                    return `Nuestro estudio está ubicado en:\n\nAv. Javier Prado 1234, Oficina 501\nSan Isidro, Lima - Perú\n\n¿Necesitas indicaciones más detalladas?`;
+                }
+                else if (lowerMsg.includes('gracias') || lowerMsg.includes('agradezco')) {
+                    return `¡De nada! 😊 No dudes en consultarme si tienes otra pregunta.`;
+                }
+                else {
+                    return `Entendido. Para darte una mejor respuesta, ¿podrías especificar si tu consulta es sobre:\n\n- Servicios legales\n- Contactar un abogado\n- Horarios de atención\n- Ubicación de nuestras oficinas?`;
+                }
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+        });
+    </script>
+</body>
+</html>

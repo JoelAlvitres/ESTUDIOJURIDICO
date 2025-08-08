@@ -7,6 +7,7 @@ use App\Http\Controllers\NosotrosController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\NovedadController;
 use App\Http\Controllers\TestimonioController;
+use App\Http\Controllers\ProfesionalController;
 
 
 
@@ -49,4 +50,5 @@ Route::get('/contacto', [ContactController::class, 'index'])->name('contact');
 // Ruta POST para procesar el envío del formulario
 Route::post('/contacto', [ContactController::class, 'sendEmail'])->name('contact.send');
 // Ruta pública para ver todos los reconocimientos
+Route::get('/profesional/{slug}', [ProfesionalController::class, 'show'])->name('profesional.show');
 
